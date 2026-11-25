@@ -1,0 +1,452 @@
+/* === Reset & Base === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+}
+
+/* === Header === */
+.header {
+    background: #16213e;
+    padding: 16px 20px;
+    text-align: center;
+    border-bottom: 2px solid #0f3460;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header h1 {
+    font-size: 20px;
+    color: #e94560;
+    letter-spacing: 1px;
+}
+
+.header .subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* === Container === */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* === Sheet Config (합판 원판 사이즈 설정) === */
+.sheet-config {
+    background: #16213e;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    border: 1px solid #0f3460;
+}
+
+.sheet-config .label {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 8px;
+}
+
+.sheet-config .size-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sheet-config input {
+    width: 90px;
+    padding: 8px 10px;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+}
+
+.sheet-config .x-mark {
+    color: #e94560;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.sheet-config .unit {
+    color: #888;
+    font-size: 13px;
+}
+
+/* === Saw Kerf Config (톱밥 두께) === */
+.saw-kerf-config {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.saw-kerf-config label {
+    font-size: 12px;
+    color: #888;
+}
+
+.saw-kerf-config input {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* === Rotation Toggle (부재 회전) === */
+.rotation-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.rotation-toggle label {
+    font-size: 12px;
+    color: #888;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #333;
+    border-radius: 22px;
+    transition: 0.3s;
+}
+
+.toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #e94560;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+}
+
+/* === Input Section (부재 입력 영역) === */
+.input-section {
+    background: #16213e;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #0f3460;
+}
+
+.input-section h2 {
+    font-size: 15px;
+    color: #e94560;
+    margin-bottom: 12px;
+}
+
+.input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.input-group label {
+    font-size: 11px;
+    color: #888;
+}
+
+.input-group input {
+    width: 80px;
+    padding: 10px 8px;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #e94560;
+}
+
+.input-group input.name-input {
+    width: 100px;
+}
+
+/* === Buttons === */
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-add {
+    background: #e94560;
+    color: #fff;
+    align-self: flex-end;
+}
+
+.btn-add:hover {
+    background: #c73a52;
+}
+
+.btn-calc {
+    background: #0f3460;
+    color: #fff;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+.btn-calc:hover {
+    background: #1a4a8a;
+}
+
+.btn-clear {
+    background: #333;
+    color: #aaa;
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.btn-clear:hover {
+    background: #444;
+}
+
+/* === Parts Table (부재 목록) === */
+.parts-table {
+    width: 100%;
+    margin-top: 12px;
+    border-collapse: collapse;
+}
+
+.parts-table th {
+    background: #0f3460;
+    padding: 8px 6px;
+    font-size: 12px;
+    text-align: center;
+    color: #ccc;
+}
+
+.parts-table td {
+    padding: 8px 6px;
+    font-size: 13px;
+    text-align: center;
+    border-bottom: 1px solid #2a2a4a;
+}
+
+.parts-table tr:hover {
+    background: rgba(233, 69, 96, 0.1);
+}
+
+.parts-table .color-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: #e94560;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+}
+
+.btn-delete:hover {
+    color: #ff6b81;
+}
+
+/* === Quantity Controls (수량 조절) === */
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.qty-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    background: #1a1a2e;
+    color: #e94560;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn:hover {
+    background: #0f3460;
+}
+
+.qty-value {
+    min-width: 24px;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* === Result Section (결과 영역) === */
+.result-section {
+    margin-top: 20px;
+}
+
+.result-summary {
+    background: linear-gradient(135deg, #0f3460, #16213e);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid #e94560;
+    text-align: center;
+}
+
+.result-summary .total-sheets {
+    font-size: 48px;
+    font-weight: 800;
+    color: #e94560;
+}
+
+.result-summary .total-label {
+    font-size: 14px;
+    color: #aaa;
+    margin-top: 4px;
+}
+
+.result-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 100px;
+}
+
+.stat-box .stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #4fc3f7;
+}
+
+.stat-box .stat-label {
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+}
+
+/* === Sheet Visualization (합판 시각화) === */
+.sheet-visual {
+    background: #16213e;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 1px solid #0f3460;
+}
+
+.sheet-visual h3 {
+    font-size: 14px;
+    color: #4fc3f7;
+    margin-bottom: 12px;
+}
+
+.sheet-canvas-wrapper {
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.sheet-canvas-wrapper canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+/* === Empty State === */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-state .icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+/* === Responsive === */
+@media (max-width: 480px) {
+    .input-group input {
+        width: 65px;
+        padding: 8px 5px;
+        font-size: 14px;
+    }
+
+    .input-group input.name-input {
+        width: 80px;
+    }
+
+    .result-summary .total-sheets {
+        font-size: 36px;
+    }
+}

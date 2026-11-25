@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>합판 재단 계산기</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>합판 재단 계산기</h1>
+        <div class="subtitle">필요한 합판 수량을 자동으로 계산합니다</div>
+    </div>
+
+    <div class="container">
+        <!-- 합판 원판 사이즈 설정 -->
+        <div class="sheet-config">
+            <div class="label">합판 원판 사이즈</div>
+            <div class="size-row">
+                <input type="number" id="sheetWidth" value="1220" min="1">
+                <span class="x-mark">&times;</span>
+                <input type="number" id="sheetHeight" value="2440" min="1">
+                <span class="unit">mm</span>
+            </div>
+            <div class="saw-kerf-config">
+                <label>톱밥 두께 (절단 여유):</label>
+                <input type="number" id="sawKerf" value="4" min="0" max="20">
+                <span class="unit">mm</span>
+            </div>
+            <div class="rotation-toggle">
+                <label>부재 회전 허용:</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="allowRotation" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 부재 입력 -->
+        <div class="input-section">
+            <h2>재단 부재 입력</h2>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>이름</label>
+                    <input type="text" id="partName" class="name-input" placeholder="부재명">
+                </div>
+                <div class="input-group">
+                    <label>가로(mm)</label>
+                    <input type="number" id="partWidth" placeholder="가로" min="1">
+                </div>
+                <div class="input-group">
+                    <label>세로(mm)</label>
+                    <input type="number" id="partHeight" placeholder="세로" min="1">
+                </div>
+                <div class="input-group">
+                    <label>수량</label>
+                    <input type="number" id="partQty" placeholder="수량" value="1" min="1" style="width:55px;">
+                </div>
+                <button class="btn btn-add" id="btnAdd">추가</button>
+            </div>
+
+            <!-- 부재 목록 -->
+            <div id="partsListContainer">
+                <div class="empty-state" id="emptyState">
+                    <div class="icon">&#128204;</div>
+                    <div>부재를 추가해주세요</div>
+                </div>
+                <table class="parts-table" id="partsTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>색상</th>
+                            <th>이름</th>
+                            <th>가로</th>
+                            <th>세로</th>
+                            <th>수량</th>
+                            <th>삭제</th>
+                        </tr>
+                    </thead>
+                    <tbody id="partsBody"></tbody>
+                </table>
+            </div>
+
+            <button class="btn btn-calc" id="btnCalc">계산하기</button>
+            <button class="btn btn-clear" id="btnClear">전체 초기화</button>
+        </div>
+
+        <!-- 결과 영역 -->
+        <div class="result-section" id="resultSection" style="display:none;">
+            <div class="result-summary">
+                <div class="total-sheets" id="totalSheets">0</div>
+                <div class="total-label">합판 필요 수량 (장)</div>
+                <div class="result-stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalParts">0</div>
+                        <div class="stat-label">총 부재 수</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="efficiency">0%</div>
+                        <div class="stat-label">재료 효율</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="wasteArea">0</div>
+                        <div class="stat-label">폐기 면적(m²)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sheetsVisualization"></div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
