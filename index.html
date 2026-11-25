@@ -4,12 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>합판 재단 계산기</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="header">
-        <h1>합판 재단 계산기</h1>
-        <div class="subtitle">필요한 합판 수량을 자동으로 계산합니다</div>
+        <div class="header-inner">
+            <div class="header-text">
+                <h1>합판 재단 계산기</h1>
+                <div class="subtitle">필요한 합판 수량을 자동으로 계산합니다</div>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="테마 변경">
+                <span class="icon-sun">&#9728;&#65039;</span>
+                <span class="icon-moon">&#127769;</span>
+            </button>
+        </div>
     </div>
 
     <div class="container">
@@ -17,7 +27,7 @@
         <div class="sheet-config">
             <div class="label">합판 원판 사이즈</div>
             <div class="size-row">
-                <input type="number" id="sheetWidth" value="1220" min="1">
+                <input type="number" id="sheetWidth" value="1200" min="1">
                 <span class="x-mark">&times;</span>
                 <input type="number" id="sheetHeight" value="2440" min="1">
                 <span class="unit">mm</span>
@@ -106,6 +116,15 @@
             </div>
 
             <div id="sheetsVisualization"></div>
+        </div>
+    </div>
+
+    <!-- 확대 모달 -->
+    <div class="modal-overlay" id="sheetModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <h3 id="modalTitle"></h3>
+            <canvas id="modalCanvas"></canvas>
         </div>
     </div>
 

@@ -2,10 +2,10 @@
     'use strict';
 
     // === 상태 ===
-    let parts = [];
-    let partIdCounter = 0;
+    var parts = [];
+    var partIdCounter = 0;
 
-    const COLORS = [
+    var COLORS = [
         '#e94560', '#4fc3f7', '#66bb6a', '#ffa726', '#ab47bc',
         '#ef5350', '#26c6da', '#9ccc65', '#ffca28', '#7e57c2',
         '#ff7043', '#26a69a', '#d4e157', '#ffee58', '#5c6bc0',
@@ -13,13 +13,42 @@
     ];
 
     // === DOM 헬퍼 ===
-    const $ = function (id) { return document.getElementById(id); };
+    var $ = function (id) { return document.getElementById(id); };
+
+    // === 테마 관리 ===
+    function initTheme() {
+        var saved = localStorage.getItem('plywood-theme');
+        if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+    }
+
+    function toggleTheme() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('plywood-theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('plywood-theme', 'dark');
+        }
+    }
+
+    function isDarkTheme() {
+        return document.documentElement.getAttribute('data-theme') === 'dark';
+    }
+
+    // 페이지 로드 전 테마 적용 (깜빡임 방지)
+    initTheme();
 
     // === 초기화 ===
     document.addEventListener('DOMContentLoaded', function () {
         $('btnAdd').addEventListener('click', addPart);
         $('btnCalc').addEventListener('click', calculate);
         $('btnClear').addEventListener('click', clearAll);
+        $('themeToggle').addEventListener('click', toggleTheme);
 
         // Enter 키로 부재 추가
         ['partName', 'partWidth', 'partHeight', 'partQty'].forEach(function (id) {
@@ -298,100 +327,166 @@
     }
 
     // === 시각화 ===
+    var lastSheets = null;
+    var lastSheetW = 0;
+    var lastSheetH = 0;
+
     function renderSheets(sheets, sheetW, sheetH) {
+        lastSheets = sheets;
+        lastSheetW = sheetW;
+        lastSheetH = sheetH;
+
         var container = $('sheetsVisualization');
         container.innerHTML = '';
 
-        var maxCanvasWidth = Math.min(window.innerWidth - 64, 720);
-        var scale = maxCanvasWidth / sheetW;
-        var canvasW = Math.floor(sheetW * scale);
-        var canvasH = Math.floor(sheetH * scale);
+        var grid = document.createElement('div');
+        grid.className = 'sheets-grid';
+        container.appendChild(grid);
+
+        // 썸네일용 고정 해상도 (작게)
+        var thumbW = 300;
+        var thumbScale = thumbW / sheetW;
+        var thumbH = Math.floor(sheetH * thumbScale);
 
         sheets.forEach(function (sheet, idx) {
             var div = document.createElement('div');
             div.className = 'sheet-visual';
+            div.setAttribute('data-idx', idx);
 
             var usedArea = sheet.placements.reduce(function (s, p) { return s + p.w * p.h; }, 0);
             var eff = ((usedArea / (sheetW * sheetH)) * 100).toFixed(1);
 
             div.innerHTML =
-                '<h3>#' + (idx + 1) + ' 합판 (부재 ' + sheet.placements.length + '개, 효율 ' + eff + '%)</h3>' +
+                '<h3>#' + (idx + 1) + ' (부재 ' + sheet.placements.length + '개, ' + eff + '%)</h3>' +
                 '<div class="sheet-canvas-wrapper">' +
-                '  <canvas width="' + canvasW + '" height="' + canvasH + '"></canvas>' +
+                '  <canvas width="' + thumbW + '" height="' + thumbH + '"></canvas>' +
                 '</div>';
-            container.appendChild(div);
+            grid.appendChild(div);
 
             var canvas = div.querySelector('canvas');
-            var ctx = canvas.getContext('2d');
+            drawSheet(canvas, sheet, sheetW, sheetH, thumbScale);
 
-            // 합판 배경
-            ctx.fillStyle = '#2a2a4a';
-            ctx.fillRect(0, 0, canvasW, canvasH);
-
-            // 합판 테두리
-            ctx.strokeStyle = '#4fc3f7';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(1, 1, canvasW - 2, canvasH - 2);
-
-            // 부재 배치 그리기
-            sheet.placements.forEach(function (p) {
-                var x = p.x * scale;
-                var y = p.y * scale;
-                var w = p.w * scale;
-                var h = p.h * scale;
-
-                // 부재 채우기
-                ctx.fillStyle = p.color + 'CC';
-                ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
-
-                // 부재 테두리
-                ctx.strokeStyle = p.color;
-                ctx.lineWidth = 1.5;
-                ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
-
-                // 텍스트
-                var fontSize = Math.max(9, Math.min(14, Math.min(w, h) * 0.25));
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold ' + fontSize + 'px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-
-                var displayW = p.rotated ? p.height : p.width;
-                var displayH = p.rotated ? p.width : p.height;
-
-                var text = p.name;
-                var sizeText = displayW + '\u00D7' + displayH;
-
-                if (h > fontSize * 3 && w > 40) {
-                    ctx.fillText(text, x + w / 2, y + h / 2 - fontSize * 0.6, w - 4);
-                    ctx.font = (fontSize * 0.8) + 'px sans-serif';
-                    ctx.fillStyle = '#ccc';
-                    ctx.fillText(sizeText, x + w / 2, y + h / 2 + fontSize * 0.6, w - 4);
-                } else if (w > 30) {
-                    ctx.fillText(text, x + w / 2, y + h / 2, w - 4);
-                }
-
-                // 회전 표시
-                if (p.rotated) {
-                    ctx.font = Math.max(8, fontSize * 0.7) + 'px sans-serif';
-                    ctx.fillStyle = '#ffca28';
-                    ctx.textAlign = 'right';
-                    ctx.fillText('R', x + w - 3, y + 10);
-                }
+            // 클릭 시 모달 확대
+            div.addEventListener('click', function () {
+                openModal(idx);
             });
-
-            // 합판 사이즈 라벨
-            ctx.fillStyle = '#888';
-            ctx.font = '11px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(sheetW + ' mm', canvasW / 2, canvasH - 4);
-            ctx.save();
-            ctx.translate(12, canvasH / 2);
-            ctx.rotate(-Math.PI / 2);
-            ctx.fillText(sheetH + ' mm', 0, 0);
-            ctx.restore();
         });
+
+        // 모달 이벤트 등록
+        $('modalClose').onclick = closeModal;
+        $('sheetModal').onclick = function (e) {
+            if (e.target === $('sheetModal')) closeModal();
+        };
     }
+
+    function drawSheet(canvas, sheet, sheetW, sheetH, scale) {
+        var ctx = canvas.getContext('2d');
+        var cw = canvas.width;
+        var ch = canvas.height;
+
+        var dark = isDarkTheme();
+        var canvasBg = dark ? '#2a2a4a' : '#dde3ea';
+        var canvasStroke = dark ? '#4fc3f7' : '#0f3460';
+        var canvasLabel = dark ? '#888' : '#666';
+
+        // 배경
+        ctx.fillStyle = canvasBg;
+        ctx.fillRect(0, 0, cw, ch);
+
+        // 테두리
+        ctx.strokeStyle = canvasStroke;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1, 1, cw - 2, ch - 2);
+
+        // 부재 배치
+        sheet.placements.forEach(function (p) {
+            var x = p.x * scale;
+            var y = p.y * scale;
+            var w = p.w * scale;
+            var h = p.h * scale;
+
+            ctx.fillStyle = p.color + 'CC';
+            ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
+
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+
+            var fontSize = Math.max(8, Math.min(14, Math.min(w, h) * 0.25));
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold ' + fontSize + 'px "Pretendard Variable", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            var displayW = p.rotated ? p.height : p.width;
+            var displayH = p.rotated ? p.width : p.height;
+            var text = p.name;
+            var sizeText = displayW + '\u00D7' + displayH;
+
+            if (h > fontSize * 3 && w > 40) {
+                ctx.fillText(text, x + w / 2, y + h / 2 - fontSize * 0.6, w - 4);
+                ctx.font = (fontSize * 0.8) + 'px "Pretendard Variable", sans-serif';
+                ctx.fillStyle = '#eee';
+                ctx.fillText(sizeText, x + w / 2, y + h / 2 + fontSize * 0.6, w - 4);
+            } else if (w > 30) {
+                ctx.fillText(text, x + w / 2, y + h / 2, w - 4);
+            }
+
+            if (p.rotated) {
+                ctx.font = Math.max(8, fontSize * 0.7) + 'px "Pretendard Variable", sans-serif';
+                ctx.fillStyle = '#ffca28';
+                ctx.textAlign = 'right';
+                ctx.fillText('R', x + w - 3, y + 10);
+            }
+        });
+
+        // 사이즈 라벨
+        ctx.fillStyle = canvasLabel;
+        ctx.font = '10px "Pretendard Variable", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(sheetW + ' mm', cw / 2, ch - 3);
+        ctx.save();
+        ctx.translate(10, ch / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText(sheetH + ' mm', 0, 0);
+        ctx.restore();
+    }
+
+    // === 모달 ===
+    function openModal(idx) {
+        var sheet = lastSheets[idx];
+        var sheetW = lastSheetW;
+        var sheetH = lastSheetH;
+
+        var usedArea = sheet.placements.reduce(function (s, p) { return s + p.w * p.h; }, 0);
+        var eff = ((usedArea / (sheetW * sheetH)) * 100).toFixed(1);
+
+        $('modalTitle').textContent = '#' + (idx + 1) + ' 합판 (부재 ' + sheet.placements.length + '개, 효율 ' + eff + '%)';
+
+        // 모달용 큰 캔버스
+        var maxW = Math.min(window.innerWidth - 80, 700);
+        var bigScale = maxW / sheetW;
+        var bigW = Math.floor(sheetW * bigScale);
+        var bigH = Math.floor(sheetH * bigScale);
+
+        var canvas = $('modalCanvas');
+        canvas.width = bigW;
+        canvas.height = bigH;
+        drawSheet(canvas, sheet, sheetW, sheetH, bigScale);
+
+        $('sheetModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        $('sheetModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // ESC로 모달 닫기
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+    });
 
     // === 유틸리티 ===
     function escapeHtml(str) {

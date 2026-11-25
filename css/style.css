@@ -5,34 +5,163 @@
     box-sizing: border-box;
 }
 
+/* === CSS Variables (Light Theme - Default) === */
+:root {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-input: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-secondary: #555;
+    --text-muted: #888;
+    --border-color: #ddd;
+    --border-focus: #e94560;
+    --accent: #e94560;
+    --accent-hover: #c73a52;
+    --accent-light: rgba(233, 69, 96, 0.08);
+    --btn-primary-bg: #1a1a2e;
+    --btn-primary-text: #fff;
+    --btn-primary-hover: #2d2d4e;
+    --btn-secondary-bg: #e8e8e8;
+    --btn-secondary-text: #666;
+    --btn-secondary-hover: #ddd;
+    --table-header-bg: #f0f0f0;
+    --table-header-text: #555;
+    --table-border: #eee;
+    --stat-value-color: #0f3460;
+    --stat-box-bg: #f0f4f8;
+    --result-bg: linear-gradient(135deg, #f8f9fa, #ffffff);
+    --result-border: #e94560;
+    --sheet-bg: #e8ecf0;
+    --sheet-stroke: #0f3460;
+    --canvas-bg: #dde3ea;
+    --canvas-text: #fff;
+    --canvas-text-sub: #eee;
+    --canvas-label: #666;
+    --toggle-bg: #ccc;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* === Dark Theme === */
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-input: #1a1a2e;
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaa;
+    --text-muted: #888;
+    --border-color: #0f3460;
+    --border-focus: #e94560;
+    --accent: #e94560;
+    --accent-hover: #c73a52;
+    --accent-light: rgba(233, 69, 96, 0.15);
+    --btn-primary-bg: #0f3460;
+    --btn-primary-text: #fff;
+    --btn-primary-hover: #1a4a8a;
+    --btn-secondary-bg: #333;
+    --btn-secondary-text: #aaa;
+    --btn-secondary-hover: #444;
+    --table-header-bg: #0f3460;
+    --table-header-text: #ccc;
+    --table-border: #2a2a4a;
+    --stat-value-color: #4fc3f7;
+    --stat-box-bg: #1a1a2e;
+    --result-bg: linear-gradient(135deg, #0f3460, #16213e);
+    --result-border: #e94560;
+    --sheet-bg: #16213e;
+    --sheet-stroke: #4fc3f7;
+    --canvas-bg: #2a2a4a;
+    --canvas-text: #fff;
+    --canvas-text-sub: #ccc;
+    --canvas-label: #888;
+    --toggle-bg: #333;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
-    background: #1a1a2e;
-    color: #e0e0e0;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
 }
 
 /* === Header === */
 .header {
-    background: #16213e;
+    background: var(--bg-secondary);
     padding: 16px 20px;
     text-align: center;
-    border-bottom: 2px solid #0f3460;
+    border-bottom: 2px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.header-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.header-text {
+    text-align: center;
 }
 
 .header h1 {
     font-size: 20px;
-    color: #e94560;
+    color: var(--accent);
     letter-spacing: 1px;
+    font-weight: 700;
 }
 
 .header .subtitle {
     font-size: 12px;
-    color: #888;
+    color: var(--text-muted);
     margin-top: 4px;
+}
+
+/* === Theme Toggle === */
+.theme-toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: background 0.2s, border-color 0.2s;
+    line-height: 1;
+}
+
+.theme-toggle:hover {
+    background: var(--btn-secondary-hover);
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+    display: none;
+}
+
+.theme-toggle .icon-sun {
+    display: block;
+}
+
+[data-theme="dark"] .theme-toggle .icon-sun {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+    display: block;
 }
 
 /* === Container === */
@@ -44,17 +173,19 @@ body {
 
 /* === Sheet Config (합판 원판 사이즈 설정) === */
 .sheet-config {
-    background: #16213e;
+    background: var(--bg-secondary);
     border-radius: 10px;
     padding: 14px 16px;
     margin-bottom: 16px;
-    border: 1px solid #0f3460;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
 }
 
 .sheet-config .label {
     font-size: 13px;
-    color: #aaa;
+    color: var(--text-secondary);
     margin-bottom: 8px;
+    font-weight: 600;
 }
 
 .sheet-config .size-row {
@@ -66,22 +197,23 @@ body {
 .sheet-config input {
     width: 90px;
     padding: 8px 10px;
-    border: 1px solid #0f3460;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--bg-input);
+    color: var(--text-primary);
     font-size: 16px;
     text-align: center;
+    font-family: inherit;
 }
 
 .sheet-config .x-mark {
-    color: #e94560;
+    color: var(--accent);
     font-weight: bold;
     font-size: 16px;
 }
 
 .sheet-config .unit {
-    color: #888;
+    color: var(--text-muted);
     font-size: 13px;
 }
 
@@ -95,18 +227,19 @@ body {
 
 .saw-kerf-config label {
     font-size: 12px;
-    color: #888;
+    color: var(--text-muted);
 }
 
 .saw-kerf-config input {
     width: 60px;
     padding: 6px 8px;
-    border: 1px solid #0f3460;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--bg-input);
+    color: var(--text-primary);
     font-size: 14px;
     text-align: center;
+    font-family: inherit;
 }
 
 /* === Rotation Toggle (부재 회전) === */
@@ -119,7 +252,7 @@ body {
 
 .rotation-toggle label {
     font-size: 12px;
-    color: #888;
+    color: var(--text-muted);
 }
 
 .toggle-switch {
@@ -138,7 +271,7 @@ body {
     position: absolute;
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #333;
+    background-color: var(--toggle-bg);
     border-radius: 22px;
     transition: 0.3s;
 }
@@ -156,7 +289,7 @@ body {
 }
 
 .toggle-switch input:checked + .toggle-slider {
-    background-color: #e94560;
+    background-color: var(--accent);
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
@@ -165,17 +298,19 @@ body {
 
 /* === Input Section (부재 입력 영역) === */
 .input-section {
-    background: #16213e;
+    background: var(--bg-secondary);
     border-radius: 10px;
     padding: 16px;
     margin-bottom: 16px;
-    border: 1px solid #0f3460;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
 }
 
 .input-section h2 {
     font-size: 15px;
-    color: #e94560;
+    color: var(--accent);
     margin-bottom: 12px;
+    font-weight: 700;
 }
 
 .input-row {
@@ -194,23 +329,26 @@ body {
 
 .input-group label {
     font-size: 11px;
-    color: #888;
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
 .input-group input {
     width: 80px;
     padding: 10px 8px;
-    border: 1px solid #0f3460;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--bg-input);
+    color: var(--text-primary);
     font-size: 15px;
     text-align: center;
+    font-family: inherit;
+    transition: border-color 0.2s;
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: #e94560;
+    border-color: var(--border-focus);
 }
 
 .input-group input.name-input {
@@ -225,22 +363,23 @@ body {
     font-size: 14px;
     cursor: pointer;
     font-weight: 600;
+    font-family: inherit;
     transition: background 0.2s;
 }
 
 .btn-add {
-    background: #e94560;
+    background: var(--accent);
     color: #fff;
     align-self: flex-end;
 }
 
 .btn-add:hover {
-    background: #c73a52;
+    background: var(--accent-hover);
 }
 
 .btn-calc {
-    background: #0f3460;
-    color: #fff;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
     width: 100%;
     padding: 14px;
     font-size: 16px;
@@ -248,12 +387,12 @@ body {
 }
 
 .btn-calc:hover {
-    background: #1a4a8a;
+    background: var(--btn-primary-hover);
 }
 
 .btn-clear {
-    background: #333;
-    color: #aaa;
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
     width: 100%;
     padding: 10px;
     font-size: 13px;
@@ -261,7 +400,7 @@ body {
 }
 
 .btn-clear:hover {
-    background: #444;
+    background: var(--btn-secondary-hover);
 }
 
 /* === Parts Table (부재 목록) === */
@@ -272,22 +411,23 @@ body {
 }
 
 .parts-table th {
-    background: #0f3460;
+    background: var(--table-header-bg);
     padding: 8px 6px;
     font-size: 12px;
     text-align: center;
-    color: #ccc;
+    color: var(--table-header-text);
+    font-weight: 600;
 }
 
 .parts-table td {
     padding: 8px 6px;
     font-size: 13px;
     text-align: center;
-    border-bottom: 1px solid #2a2a4a;
+    border-bottom: 1px solid var(--table-border);
 }
 
 .parts-table tr:hover {
-    background: rgba(233, 69, 96, 0.1);
+    background: var(--accent-light);
 }
 
 .parts-table .color-dot {
@@ -302,7 +442,7 @@ body {
 .btn-delete {
     background: none;
     border: none;
-    color: #e94560;
+    color: var(--accent);
     cursor: pointer;
     font-size: 16px;
     padding: 2px 6px;
@@ -322,19 +462,20 @@ body {
 .qty-btn {
     width: 24px;
     height: 24px;
-    border: 1px solid #0f3460;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    background: #1a1a2e;
-    color: #e94560;
+    background: var(--bg-input);
+    color: var(--accent);
     font-size: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: inherit;
 }
 
 .qty-btn:hover {
-    background: #0f3460;
+    background: var(--accent-light);
 }
 
 .qty-value {
@@ -349,23 +490,24 @@ body {
 }
 
 .result-summary {
-    background: linear-gradient(135deg, #0f3460, #16213e);
+    background: var(--result-bg);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 16px;
-    border: 1px solid #e94560;
+    border: 1px solid var(--result-border);
     text-align: center;
+    box-shadow: var(--shadow);
 }
 
 .result-summary .total-sheets {
     font-size: 48px;
     font-weight: 800;
-    color: #e94560;
+    color: var(--accent);
 }
 
 .result-summary .total-label {
     font-size: 14px;
-    color: #aaa;
+    color: var(--text-secondary);
     margin-top: 4px;
 }
 
@@ -378,7 +520,7 @@ body {
 }
 
 .stat-box {
-    background: #1a1a2e;
+    background: var(--stat-box-bg);
     border-radius: 8px;
     padding: 10px 16px;
     text-align: center;
@@ -388,45 +530,128 @@ body {
 .stat-box .stat-value {
     font-size: 20px;
     font-weight: 700;
-    color: #4fc3f7;
+    color: var(--stat-value-color);
 }
 
 .stat-box .stat-label {
     font-size: 11px;
-    color: #888;
+    color: var(--text-muted);
     margin-top: 2px;
 }
 
 /* === Sheet Visualization (합판 시각화) === */
+.sheets-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
 .sheet-visual {
-    background: #16213e;
+    background: var(--bg-secondary);
     border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 14px;
-    border: 1px solid #0f3460;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+}
+
+.sheet-visual:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
 }
 
 .sheet-visual h3 {
-    font-size: 14px;
-    color: #4fc3f7;
-    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--stat-value-color);
+    margin-bottom: 8px;
+    font-weight: 600;
 }
 
 .sheet-canvas-wrapper {
-    overflow-x: auto;
-    padding-bottom: 8px;
+    overflow: hidden;
 }
 
 .sheet-canvas-wrapper canvas {
     display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* === Modal (확대 보기) === */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 95vw;
+    max-height: 95vh;
+    overflow: auto;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    font-size: 15px;
+    color: var(--stat-value-color);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.modal-content canvas {
+    display: block;
     margin: 0 auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--btn-secondary-bg);
+    color: var(--text-primary);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* === Grid responsive === */
+@media (max-width: 540px) {
+    .sheets-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* === Empty State === */
 .empty-state {
     text-align: center;
     padding: 40px 20px;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .empty-state .icon {
@@ -448,5 +673,11 @@ body {
 
     .result-summary .total-sheets {
         font-size: 36px;
+    }
+
+    .theme-toggle {
+        width: 34px;
+        height: 34px;
+        font-size: 17px;
     }
 }
