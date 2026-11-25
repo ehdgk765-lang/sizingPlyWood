@@ -43,8 +43,64 @@
     // 페이지 로드 전 테마 적용 (깜빡임 방지)
     initTheme();
 
+    // === 보안코드 ===
+    var CODE_HASH = 'b62764dc19af7e6a2fd312662a2fe207d273a883e64bf87bd0ec755007649e6c';
+
+    function sha256(str) {
+        var encoder = new TextEncoder();
+        var data = encoder.encode(str);
+        return crypto.subtle.digest('SHA-256', data).then(function (buf) {
+            var arr = new Uint8Array(buf);
+            var hex = '';
+            for (var i = 0; i < arr.length; i++) {
+                hex += ('0' + arr[i].toString(16)).slice(-2);
+            }
+            return hex;
+        });
+    }
+
+    function checkLock() {
+        if (sessionStorage.getItem('plywood-unlocked') === 'true') {
+            $('lockScreen').classList.add('hidden');
+            return;
+        }
+        $('lockCode').focus();
+    }
+
+    function attemptUnlock() {
+        var code = $('lockCode').value;
+        if (code.length !== 4) {
+            showLockError('4자리 숫자를 입력해주세요');
+            return;
+        }
+        sha256(code).then(function (hash) {
+            if (hash === CODE_HASH) {
+                sessionStorage.setItem('plywood-unlocked', 'true');
+                $('lockScreen').classList.add('hidden');
+            } else {
+                showLockError('보안코드가 일치하지 않습니다');
+                $('lockCode').value = '';
+                $('lockCode').classList.add('shake');
+                setTimeout(function () {
+                    $('lockCode').classList.remove('shake');
+                }, 500);
+            }
+        });
+    }
+
+    function showLockError(msg) {
+        $('lockError').textContent = msg;
+    }
+
     // === 초기화 ===
     document.addEventListener('DOMContentLoaded', function () {
+        // 잠금 화면
+        checkLock();
+        $('lockSubmit').addEventListener('click', attemptUnlock);
+        $('lockCode').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') attemptUnlock();
+        });
+
         $('btnAdd').addEventListener('click', addPart);
         $('btnCalc').addEventListener('click', calculate);
         $('btnClear').addEventListener('click', clearAll);

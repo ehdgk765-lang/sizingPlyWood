@@ -681,3 +681,107 @@ body {
         font-size: 17px;
     }
 }
+
+/* === Lock Screen (잠금 화면) === */
+.lock-screen {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg-primary);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lock-screen.hidden {
+    display: none;
+}
+
+.lock-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 40px 36px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    width: 320px;
+    max-width: 90vw;
+}
+
+.lock-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.lock-box h2 {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.lock-box p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.lock-input-row {
+    margin-bottom: 14px;
+}
+
+.lock-input-row input {
+    width: 160px;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 12px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.lock-input-row input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn-lock-submit {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 40px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.btn-lock-submit:hover {
+    background: var(--accent-hover);
+}
+
+.lock-error {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--accent);
+    min-height: 20px;
+}
+
+.lock-screen .lock-input-row input.shake {
+    animation: shake 0.4s ease;
+    border-color: var(--accent);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+}

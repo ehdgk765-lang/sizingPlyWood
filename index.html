@@ -9,6 +9,20 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- 잠금 화면 -->
+    <div class="lock-screen" id="lockScreen">
+        <div class="lock-box">
+            <div class="lock-icon">&#128274;</div>
+            <h2>보안코드 입력</h2>
+            <p>4자리 숫자를 입력해주세요</p>
+            <div class="lock-input-row">
+                <input type="password" id="lockCode" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="****">
+            </div>
+            <button class="btn btn-lock-submit" id="lockSubmit">확인</button>
+            <div class="lock-error" id="lockError"></div>
+        </div>
+    </div>
+
     <div class="header">
         <div class="header-inner">
             <div class="header-text">
